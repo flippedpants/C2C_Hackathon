@@ -2,14 +2,23 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/components/Button'
+import { loginWithGoogle } from '../../../backend/config/firebase'
 
 export const LoginPopUp = ({ isOpen, onClose }) => {
 
-    const handleGoogleLogin = () => {
-      // Frontend only - just logs the action
-      console.log('Google login clicked');
-      alert('Google login would be handled here with actual OAuth implementation');
+    const handleGoogleLogin = async () => {
+      try {
+        const user = await loginWithGoogle(); // Call the loginWithGoogle function
+        console.log("Logged in user:", user);
+        alert(`Welcome ${user.displayName}`); // Display a welcome message
+        onClose(); // Close the popup after successful login
+      } catch (err) {
+        console.error("Login failed:", err);
+        alert("Login failed. Please check your internet connection or try again later.");
+      }
     };
+
+    
   
   return (
     <>  
