@@ -1,5 +1,6 @@
 import React from 'react'
 import NamePic from '@/assets/Name_pic.png'
+import { Button } from '@/components/button'
 
 const Page1 = () => {
   return (
@@ -47,16 +48,26 @@ const Page1 = () => {
             />
           </div>
         </div>
-        <div className='h-[50vh] pl-[8vw] '>
-          <div className='Head'>
+
+        <div className='h-[60vh] pl-[8vw] '>
+
+          <div className='Info-container w-fit'>
             <h1 className='text-white font-bold text-[7vh] md:text-balance font-poppins'>
               Reimagine your <span className="bg-purple-400/40 font-bold text-white/100 px-4 py-1 rounded-xl inline-block"> wardrobe </span> <br />
               with AI
             </h1>
-            <h1 className='para font-poppins text-xl text-white pt-8'> Turn your closet into a smart space with intelligent outfit planning.</h1>
+            <h1 className='para font-poppins text-[4vh] text-[#C7C7C7] pt-8'> Turn your closet into a smart space with <br />intelligent outfit planning.</h1>
+
+            <div className='flex justify-center text-center m-7 '>
+              <Button name= "Start Now" />
           </div>
+          </div>
+
+
         </div>
       </div>
+
+
     </div>
   )
 }
