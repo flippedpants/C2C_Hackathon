@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
-import { Button } from '@/components/button';
+import { Button } from '@/components/Button';
 import logo from '@/assets/Main-logo.png'
 
 
