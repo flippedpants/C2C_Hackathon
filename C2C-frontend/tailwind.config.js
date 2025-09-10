@@ -15,6 +15,7 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+			// main: 'bg-#9180D6,',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -53,7 +54,10 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+		fontFamily: {
+			poppins : ["Poppins", "sans-serif"]
+		}
   	}
   },
   plugins: [require("tailwindcss-animate")],
