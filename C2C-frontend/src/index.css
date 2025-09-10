@@ -1,6 +1,6 @@
 @tailwind base;
 @tailwind components;
-@tailwid utilities;
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -66,3 +66,47 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Animated Lines CSS */
+@keyframes floatLine1 {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-50px) rotate(180deg); 
+  }
+}
+
+@keyframes floatLine2 {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-50px) rotate(-180deg); 
+  }
+}
+
+@keyframes floatLine3 {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-50px) rotate(180deg); 
+  }
+}
+
+.animate-float-1 {
+  animation: floatLine1 20s infinite ease-in-out;
+  transition: transform 0.1s linear;
+}
+
+.animate-float-2 {
+  animation: floatLine2 25s infinite ease-in-out;
+  transition: transform 0.1s linear;
+}
+
+.animate-float-3 {
+  animation: floatLine3 30s infinite ease-in-out;
+  transition: transform 0.1s linear;
+}
+
