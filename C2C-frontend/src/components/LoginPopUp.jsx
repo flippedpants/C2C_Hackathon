@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { Button } from '@/components/button'
+import { Button } from '@/components/Button'
 
 export const LoginPopUp = ({ isOpen, onClose }) => {
 

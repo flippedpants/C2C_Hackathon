@@ -1,6 +1,6 @@
 import React from 'react'
 import NamePic from '@/assets/Name_pic.png'
-import { Button } from '@/components/button'
+import { Button } from '@/components/Button'
 
 const Page1 = () => {
   return (
