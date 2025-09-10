@@ -22,7 +22,7 @@ function Navbar({ onLoginClick }) {
     return (
         <>
             <div className='flex justify-between items-center p-4 pb-14'>
-                <div className='pl-6'>
+                <div className='pl-6 pt-1'>
                   <img src={logo} alt="" className="w-20 h-auto" />
                 </div>
                 <div className='flex gap-7'>
