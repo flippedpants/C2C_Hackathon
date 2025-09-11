@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar'
 import Page1 from './Page1'
 import { LoginPopUp } from '@/components/LoginPopUp'
 
-function App() {
+function Landing() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const handleOpenLogin = () => {
@@ -23,4 +23,4 @@ function App() {
   )
 }
 
-export default App
+export default Landing;
