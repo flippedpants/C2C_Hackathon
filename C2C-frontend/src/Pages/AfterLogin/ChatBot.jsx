@@ -3,6 +3,7 @@ import { Nav2 } from '@/components/Nav2'
 import { Send } from 'lucide-react'
 import botLogo from '@/assets/bot-logo.png'
 import { Button } from '@/components/Button'
+//import { askStylistLLM } from 
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([
@@ -43,20 +44,45 @@ const ChatBot = () => {
     setInputValue('')
     setIsTyping(true)
 
-    const timeoutId = setTimeout(() => {
+    // Call backend stylist endpoint
+    try {
+      const { auth } = await import('@/config/firebase')
+      const uid = auth.currentUser?.uid || 'guest'
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+      const res = await fetch(`${baseUrl}/chat/stylist/ask/${uid}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: currentInput })
+      })
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '')
+        throw new Error(errText || `Request failed with ${res.status}`)
+      }
+
+      const data = await res.json()
+      const answer = data?.answer || 'Sorry, I could not generate a response.'
+
       const botResponse = {
         id: Date.now() + 1,
         type: 'bot',
-        content: `I'd be happy to help you with that! Based on your question about "${currentInput}", here are some suggestions for putting together a great outfit. Consider the weather, occasion, and your personal style preferences. Would you like me to elaborate on any specific aspect?`,
+        content: answer,
         timestamp: new Date()
       }
       setMessages(prev => [...prev, botResponse])
-      setIsTyping(false)
       setIsExpanded(true)
-    }, 1500)
-
-    // optional: cleanup if unmounted while waiting
-    return () => clearTimeout(timeoutId)
+    } catch (error) {
+      const botError = {
+        id: Date.now() + 2,
+        type: 'bot',
+        content: 'There was an error contacting the stylist. Please try again.',
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, botError])
+      console.error('Chat error:', error)
+    } finally {
+      setIsTyping(false)
+    }
   }
 
   const handleKeyDown = (e) => {
