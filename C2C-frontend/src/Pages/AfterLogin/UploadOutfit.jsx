@@ -186,14 +186,15 @@ export const UploadOutfit = () => {
                   onChange={onFileChange}
                 />
 
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <input
                     type="text"
                     placeholder="What would you like to know about this image"
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
                     className="flex-1 rounded-2xl border-2 border-dashed border-[#9180D6] bg-[#E9E1FB] placeholder-gray-600 px-4 py-3 outline-none"
-                  />
+                  /> */}
+                  <div className="flex items-center justify-center gap-3">
                   <button
                     type="button"
                     onClick={openFilePicker}
