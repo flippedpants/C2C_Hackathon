@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/components/Button';
@@ -7,17 +7,7 @@ import logo from '@/assets/Main-logo.png'
 
 function Navbar({ onLoginClick }) {
 
-    const [selectedButton, setSelectedButton] = useState(null);
-
-    const handleButtonClick = (buttonId) => {
-      setSelectedButton(buttonId);
-    };
-  
-    const getButtonClasses = (buttonId, baseClasses) => {
-      const isSelected = selectedButton === buttonId;
-      const opacityClasses = isSelected ? 'opacity-100' : 'opacity-60 hover:opacity-90';
-      return `${baseClasses} ${opacityClasses}`;
-    };
+    const [selectedButton, setSelectedButton] = useState('Home');
 
     return (
         <>
@@ -26,9 +16,16 @@ function Navbar({ onLoginClick }) {
                   <img src={logo} alt="" className="w-20 h-auto" />
                 </div>
                 <div className='flex gap-7'>
-
-                <Button name = "Home"/>
-                <Button name = "FAQs" />
+                <Button
+                  name="Home"
+                  isSelected={selectedButton === 'Home'}
+                  onClick={() => setSelectedButton('Home')}
+                />
+                <Button
+                  name="FAQs"
+                  isSelected={selectedButton === 'FAQs'}
+                  onClick={() => setSelectedButton('FAQs')}
+                />
 
                 </div>
                 <div className='flex gap-4'>
