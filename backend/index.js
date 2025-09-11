@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/stylist', stylistRoutes);
+app.use('/chat/stylist', stylistRoutes);
 
 const port = process.env.PORT || 5000;
 

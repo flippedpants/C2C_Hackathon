@@ -16,7 +16,7 @@ const askStylistLLM = async(useId, question) => {
     const model = genAI.getGenerativeModel({model: 'gemini-2.5-flash'});
     
     const prompt = `
-    You are a virtual stylist for a user, answer their queries`;
+    You are a virtual stylist for a user, answer their queries by suggesting outfits`;
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const aiAnswer = response.text();
