@@ -5,15 +5,33 @@ const askStylist = async(req, res) => {
     const { question } = req.body;
 
     if (!question) {
-        return res.status(400).json({ error: 'Question is required' });
+        return res.status(400).json({ 
+            success: false,
+            error: 'Question is required' 
+        });
+    }
+
+    if (!uid) {
+        return res.status(400).json({ 
+            success: false,
+            error: 'User ID is required' 
+        });
     }
 
     try {
         const answer = await Stylist.askStylistLLM(uid, question);
-        res.status(200).json({ answer });
-    }catch (error) {
+        res.status(200).json({ 
+            success: true,
+            answer: answer,
+            userId: uid
+        });
+    } catch (error) {
         console.error('Stylist error: ', error.message);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ 
+            success: false,
+            error: 'Internal server error',
+            details: error.message
+        });
     }
 }
 

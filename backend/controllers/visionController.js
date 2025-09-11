@@ -22,6 +22,7 @@ const askStylistWithImage = async (req, res) => {
     - Always select from the given options. 
     - If multiple values apply, choose the most dominant/appropriate one. 
     - Do not include explanations, only the JSON object.
+    - Give in the JSON format only with proper spacing, indentation and formatting
     `;
 
     if (!req.file)
