@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import Navbar from './Navbar'
+import Navbar from '../../components/Navbar'
 import Page1 from './Page1'
 import { LoginPopUp } from '@/components/LoginPopUp'
 

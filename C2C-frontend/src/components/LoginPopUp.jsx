@@ -1,22 +1,46 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { Button } from '@/components/Button'
-import { loginWithGoogle } from '../../../backend/config/firebase'
+import { signInWithGoogle, ensureWardrobeDocument } from '@/config/firebase'
 
 export const LoginPopUp = ({ isOpen, onClose }) => {
+  const [isLoading, setIsLoading] = useState(false);
 
-    const handleGoogleLogin = async () => {
-      try {
-        const user = await loginWithGoogle(); // Call the loginWithGoogle function
-        console.log("Logged in user:", user);
-        alert(`Welcome ${user.displayName}`); // Display a welcome message
-        onClose(); // Close the popup after successful login
-      } catch (err) {
-        console.error("Login failed:", err);
-        alert("Login failed. Please check your internet connection or try again later.");
+  const handleGoogleLogin = async () => {
+    setIsLoading(true); // Show loading state
+    
+    try {
+      // 🔥 Call Firebase Google Sign-In
+      const user = await signInWithGoogle();
+      await ensureWardrobeDocument(user);
+      
+      // ✅ Success - Show welcome message
+      alert(`Welcome ${user.displayName}! 🎉`);
+      console.log('User logged in:', user);
+      
+      // 🚪 Close popup after successful login
+      onClose();
+      
+    } catch (error) {
+      // ❌ Handle errors gracefully
+      console.error('Login failed:', error);
+      
+      // Show user-friendly error message
+      if (error.code === 'auth/popup-closed-by-user') {
+        alert('Login cancelled. Please try again if you want to sign in.');
+      } else if (error.code === 'auth/network-request-failed') {
+        alert('Network request failed. Ensure third-party cookies are enabled and no ad-blockers are blocking Google. Also verify authorized domains in Firebase.');
+      } else if (error.code === 'auth/operation-not-supported-in-this-environment') {
+        alert('This environment does not support popup sign-in. Try in a regular browser window (not embedded or Incognito with strict blockers).');
+      } else if (error.code === 'auth/invalid-api-key' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-auth-domain') {
+        alert(`Firebase configuration error: ${error.code}. Check your VITE_ Firebase env vars and authorized domains.`);
+      } else {
+        alert(`Login failed: ${error.code || ''} ${error.message || ''}`.trim());
       }
-    };
+    } finally {
+      setIsLoading(false); // Hide loading state
+    }
+  };
 
     
   
