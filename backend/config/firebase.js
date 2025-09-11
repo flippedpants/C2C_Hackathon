@@ -29,7 +29,20 @@ const provider = new GoogleAuthProvider();
 const loginWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
-    return result.user; // Return the user object
+    const user = result.user;
+
+    // Create a new document in 'wardrobes' collection with user's displayName
+    if (user && user.displayName) {
+      const wardrobeRef = doc(db, "wardrobes", user.displayName);
+      await setDoc(wardrobeRef, {
+        uid: user.uid,
+        email: user.email,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    return user; // Return the user object
+    
   } catch (error) {
     console.error("Error during Google login:", error);
     throw error; // Rethrow the error to be caught in the component
