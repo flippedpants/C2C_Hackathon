@@ -131,7 +131,15 @@ const ChatBot = () => {
         </div>
         <div className="relative z-10 w-full flex justify-center pt-3 pb-10">
           <div className="flex items-center gap-4">
-            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={() => { setSelectedTab('Upload Outfit'); navigate('/upload/outfit') }} />
+            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={async () => { setSelectedTab('Upload Outfit');
+              try {
+                const { auth } = await import('@/config/firebase')
+                const uid = auth.currentUser?.uid || 'guest'
+                navigate(`/chat/wardrobe/items/analyze/${uid}`)
+              } catch {
+                navigate('/chat/stylist/ask/guest')
+              }
+             }} />
             <Button name="Style-Chat" isSelected={selectedTab === 'Style-Chat'} onClick={async () => { 
               setSelectedTab('Style-Chat'); 
               try {

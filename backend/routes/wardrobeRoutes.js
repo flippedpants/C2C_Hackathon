@@ -13,7 +13,7 @@ const {
 } = require("../controllers/wardrobeController");
 
 // Analyze image and save result to Firestore under wardrobes/{uid}
-router.post('/items/analyze', upload.single("image"), addGarmentWithImage);
+router.post('/items/analyze/:uid', upload.single("image"), addGarmentWithImage);
 
 // Get a user's wardrobe document
 router.get('/:uid', getUserWardrobe);

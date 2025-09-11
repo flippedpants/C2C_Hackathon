@@ -39,15 +39,45 @@ export const UploadOutfit = () => {
 
   const handleSend = async () => {
     if (!selectedFile) return
-    // Prepare payload for easy backend integration later
-    const formData = new FormData()
-    formData.append('image', selectedFile)
-    if (question.trim()) formData.append('question', question.trim())
+    
+    try {
+      // Get user ID
+      const { auth } = await import('@/config/firebase')
+      const uid = auth.currentUser?.uid || 'guest'
+      
+      // Prepare form data for the backend
+      const formData = new FormData()
+      formData.append('image', selectedFile)
+      if (question.trim()) formData.append('question', question.trim())
 
-    // Placeholder: integrate with backend endpoint here
-    console.log('Ready to send', { file: selectedFile, question })
-    // Example later:
-    // await fetch(`${baseUrl}/upload`, { method: 'POST', body: formData })
+      // Call the backend addGarmentWithImage endpoint
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+      const response = await fetch(`${baseUrl}/chat/wardrobe/items/analyze/${uid}`, {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => '')
+        throw new Error(errorText || `Request failed with ${response.status}`)
+      }
+
+      const result = await response.json()
+      
+      if (result.success) {
+        alert('Outfit analyzed and added to wardrobe successfully!')
+        // Clear the form
+        setSelectedFile(null)
+        if (previewUrl) URL.revokeObjectURL(previewUrl)
+        setPreviewUrl('')
+        setQuestion('')
+      } else {
+        alert(`Error: ${result.error || 'Failed to analyze outfit'}`)
+      }
+    } catch (error) {
+      console.error('Error uploading outfit:', error)
+      alert('Failed to upload outfit. Please try again.')
+    }
   }
 
   return (
@@ -71,7 +101,15 @@ export const UploadOutfit = () => {
 
         <div className="relative z-10 w-full flex justify-center pt-3 pb-10">
           <div className="flex items-center gap-4">
-            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={() => { setSelectedTab('Upload Outfit'); navigate('/upload/outfit') }} />
+            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={async() => { setSelectedTab('Upload Outfit');
+              try {
+                const { auth } = await import('@/config/firebase')
+                const uid = auth.currentUser?.uid || 'guest'
+                navigate(`/chat/wardrobe/items/analyze/${uid}`)
+              } catch {
+                navigate('/chat/stylist/ask/guest')
+              }
+             }} />
             <Button name="Style-Chat" isSelected={selectedTab === 'Style-Chat'} onClick={async () => {
               setSelectedTab('Style-Chat')
               try {

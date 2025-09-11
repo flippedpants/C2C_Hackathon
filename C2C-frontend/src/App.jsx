@@ -10,7 +10,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Landing />} />
       {/* <Route path="/chat" element={<ChatBot />} /> */}
-      <Route path="/upload/outfit" element={<UploadOutfit />} />
+      <Route path="/chat/wardrobe/items/analyze/:uid" element={<UploadOutfit />} />
       <Route path="/wardrobe" element={<Wardrobe />} />
       {/* Keep legacy route if needed */}
       <Route path="/chat/stylist/ask/:uid" element={<ChatBot />} />
