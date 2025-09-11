@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { signInWithGoogle, ensureWardrobeDocument } from '@/config/firebase'
+import { useNavigate } from 'react-router-dom'
 
 export const LoginPopUp = ({ isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     setIsLoading(true); // Show loading state
@@ -13,6 +15,7 @@ export const LoginPopUp = ({ isOpen, onClose }) => {
       // 🔥 Call Firebase Google Sign-In
       const user = await signInWithGoogle();
       await ensureWardrobeDocument(user);
+      navigate('/chat');
       
       // ✅ Success - Show welcome message
       alert(`Welcome ${user.displayName}! 🎉`);
