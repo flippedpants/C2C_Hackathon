@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Nav2 } from '@/components/Nav2'
 import { Send } from 'lucide-react'
-import botLogo from '@/assets/bot-logo.png'
+// import botLogo from '@/assets/bot-logo.png'
+import logo from '@/assets/Main-logo.png'
+import Reffect from '@/assets/effect.png'
+import Leffect from '@/assets/effect-left.png'
+import BLeffect from '@/assets/effect-bleft.png'
+import BReffect from '@/assets/effect-bright.png'
 import { Button } from '@/components/Button'
+import { useNavigate } from 'react-router-dom'
 //import { askStylistLLM } from 
 
 const ChatBot = () => {
+  const navigate = useNavigate()
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -17,7 +24,7 @@ const ChatBot = () => {
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [selectedTab, setSelectedTab] = useState('Upload Outfit')
+  const [selectedTab, setSelectedTab] = useState('Style-Chat')
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
 
@@ -124,18 +131,52 @@ const ChatBot = () => {
         </div>
         <div className="relative z-10 w-full flex justify-center pt-3 pb-10">
           <div className="flex items-center gap-4">
-            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={() => setSelectedTab('Upload Outfit')} />
-            <Button name="Style-Chat" isSelected={selectedTab === 'Style-Chat'} onClick={() => setSelectedTab('Style-Chat')} />
-            <Button name="My Wardrobe" isSelected={selectedTab === 'My Wardrobe'} onClick={() => setSelectedTab('My Wardrobe')} />
+            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={() => { setSelectedTab('Upload Outfit'); navigate('/upload/outfit') }} />
+            <Button name="Style-Chat" isSelected={selectedTab === 'Style-Chat'} onClick={async () => { 
+              setSelectedTab('Style-Chat'); 
+              try {
+                const { auth } = await import('@/config/firebase')
+                const uid = auth.currentUser?.uid || 'guest'
+                navigate(`/chat/stylist/ask/${uid}`)
+              } catch {
+                navigate('/chat/stylist/ask/guest')
+              }
+            }} />
+            <Button name="My Wardrobe" isSelected={selectedTab === 'My Wardrobe'} onClick={() => { setSelectedTab('My Wardrobe'); navigate('/wardrobe') }} />
           </div>
         </div>
-        <div className={`relative z-10 w-full max-w-4xl mx-auto ${isExpanded ? 'h-[68vh]' : 'h-[48vh]'} md:h-[68vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col border-y-[24px] border-x-[16px] border-[#D8D2F0] transition-all duration-500`}>
+        <div className="relative w-full max-w-4xl mx-auto">
+          <img
+            src={Leffect}
+            alt="corner effect"
+            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
+            style={{ top: 'calc(-1vh - 24px)', left: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
+          />
+          <img
+            src={Reffect}
+            alt="corner effect"
+            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
+            style={{ top: 'calc(-1vh - 24px)', right: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
+          />
+          <img
+            src={BLeffect}
+            alt="corner effect"
+            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
+            style={{ bottom: 'calc(-1vh - 24px)', left: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
+          />
+          <img
+            src={BReffect}
+            alt="corner effect"
+            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
+            style={{ bottom: 'calc(-1vh - 24px)', right: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
+          />
+          <div className={`chat-box relative z-10 w-full ${isExpanded ? 'h-[68vh]' : 'h-[48vh]'} md:h-[68vh] bg-[#D8D2F0] rounded-3xl shadow-2xl overflow-hidden flex flex-col border-y-[4vh] border-x-[3vh] border-[#9180D6] transition-all duration-500`}>
           <div className="flex-1 overflow-y-auto p-5 space-y-5">
             {messages.map((message) => (
               <div key={message.id} className="w-full">
                 {message.type === 'bot' ? (
                   <div className="flex items-start space-x-4">
-                    <img src={botLogo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
+                    <img src={logo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
                     <div className="flex-1 bg-gray-50 rounded-3xl p-4 shadow-sm">
                       <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
                         {message.content}
@@ -156,7 +197,7 @@ const ChatBot = () => {
 
             {isTyping && (
               <div className="flex items-start space-x-4">
-                <img src={botLogo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
+                <img src={logo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
                 <div className="flex-1 bg-gray-50 rounded-3xl p-4 shadow-sm">
                   <div className="flex space-x-2">
                     <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
@@ -197,6 +238,7 @@ const ChatBot = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   )
