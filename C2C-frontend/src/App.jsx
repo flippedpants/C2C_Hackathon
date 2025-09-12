@@ -2,18 +2,12 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Landing from '@/Pages/Home/Landing'
 import ChatBot from '@/Pages/AfterLogin/ChatBot'
-import Wardrobe from '@/Pages/AfterLogin/Wardrobe'
-import { UploadOutfit } from '@/Pages/AfterLogin/UploadOutfit'
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      {/* <Route path="/chat" element={<ChatBot />} /> */}
-      <Route path="/chat/wardrobe/items/analyze/:uid" element={<UploadOutfit />} />
-      <Route path="/wardrobe" element={<Wardrobe />} />
-      {/* Keep legacy route if needed */}
-      <Route path="/chat/stylist/ask/:uid" element={<ChatBot />} />
+      <Route path="/chat" element={<ChatBot />} />
     </Routes>
   )
 }

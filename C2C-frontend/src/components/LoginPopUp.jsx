@@ -15,7 +15,7 @@ export const LoginPopUp = ({ isOpen, onClose }) => {
       // 🔥 Call Firebase Google Sign-In
       const user = await signInWithGoogle();
       await ensureWardrobeDocument(user);
-      navigate(`/chat/stylist/ask/${user.uid}`);
+      navigate('/chat');
       
       // ✅ Success - Show welcome message
       alert(`Welcome ${user.displayName}! 🎉`);

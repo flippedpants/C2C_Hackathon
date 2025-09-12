@@ -1,18 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Nav2 } from '@/components/Nav2'
 import { Send } from 'lucide-react'
-// import botLogo from '@/assets/bot-logo.png'
-import logo from '@/assets/Main-logo.png'
-import Reffect from '@/assets/effect.png'
-import Leffect from '@/assets/effect-left.png'
-import BLeffect from '@/assets/effect-bleft.png'
-import BReffect from '@/assets/effect-bright.png'
+import botLogo from '@/assets/bot-logo.png'
 import { Button } from '@/components/Button'
-import { useNavigate } from 'react-router-dom'
-//import { askStylistLLM } from 
 
 const ChatBot = () => {
-  const navigate = useNavigate()
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -24,7 +16,7 @@ const ChatBot = () => {
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [selectedTab, setSelectedTab] = useState('Style-Chat')
+  const [selectedTab, setSelectedTab] = useState('Upload Outfit')
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
 
@@ -51,45 +43,20 @@ const ChatBot = () => {
     setInputValue('')
     setIsTyping(true)
 
-    // Call backend stylist endpoint
-    try {
-      const { auth } = await import('@/config/firebase')
-      const uid = auth.currentUser?.uid || 'guest'
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
-      const res = await fetch(`${baseUrl}/chat/stylist/ask/${uid}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: currentInput })
-      })
-
-      if (!res.ok) {
-        const errText = await res.text().catch(() => '')
-        throw new Error(errText || `Request failed with ${res.status}`)
-      }
-
-      const data = await res.json()
-      const answer = data?.answer || 'Sorry, I could not generate a response.'
-
+    const timeoutId = setTimeout(() => {
       const botResponse = {
         id: Date.now() + 1,
         type: 'bot',
-        content: answer,
+        content: `I'd be happy to help you with that! Based on your question about "${currentInput}", here are some suggestions for putting together a great outfit. Consider the weather, occasion, and your personal style preferences. Would you like me to elaborate on any specific aspect?`,
         timestamp: new Date()
       }
       setMessages(prev => [...prev, botResponse])
-      setIsExpanded(true)
-    } catch (error) {
-      const botError = {
-        id: Date.now() + 2,
-        type: 'bot',
-        content: 'There was an error contacting the stylist. Please try again.',
-        timestamp: new Date()
-      }
-      setMessages(prev => [...prev, botError])
-      console.error('Chat error:', error)
-    } finally {
       setIsTyping(false)
-    }
+      setIsExpanded(true)
+    }, 1500)
+
+    // optional: cleanup if unmounted while waiting
+    return () => clearTimeout(timeoutId)
   }
 
   const handleKeyDown = (e) => {
@@ -131,60 +98,18 @@ const ChatBot = () => {
         </div>
         <div className="relative z-10 w-full flex justify-center pt-3 pb-10">
           <div className="flex items-center gap-4">
-            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={async () => { setSelectedTab('Upload Outfit');
-              try {
-                const { auth } = await import('@/config/firebase')
-                const uid = auth.currentUser?.uid || 'guest'
-                navigate(`/chat/wardrobe/items/analyze/${uid}`)
-              } catch {
-                navigate('/chat/stylist/ask/guest')
-              }
-             }} />
-            <Button name="Style-Chat" isSelected={selectedTab === 'Style-Chat'} onClick={async () => { 
-              setSelectedTab('Style-Chat'); 
-              try {
-                const { auth } = await import('@/config/firebase')
-                const uid = auth.currentUser?.uid || 'guest'
-                navigate(`/chat/stylist/ask/${uid}`)
-              } catch {
-                navigate('/chat/stylist/ask/guest')
-              }
-            }} />
-            <Button name="My Wardrobe" isSelected={selectedTab === 'My Wardrobe'} onClick={() => { setSelectedTab('My Wardrobe'); navigate('/wardrobe') }} />
+            <Button name="Upload Outfit" isSelected={selectedTab === 'Upload Outfit'} onClick={() => setSelectedTab('Upload Outfit')} />
+            <Button name="Style-Chat" isSelected={selectedTab === 'Style-Chat'} onClick={() => setSelectedTab('Style-Chat')} />
+            <Button name="My Wardrobe" isSelected={selectedTab === 'My Wardrobe'} onClick={() => setSelectedTab('My Wardrobe')} />
           </div>
         </div>
-        <div className="relative w-full max-w-4xl mx-auto">
-          <img
-            src={Leffect}
-            alt="corner effect"
-            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
-            style={{ top: 'calc(-1vh - 24px)', left: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
-          />
-          <img
-            src={Reffect}
-            alt="corner effect"
-            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
-            style={{ top: 'calc(-1vh - 24px)', right: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
-          />
-          <img
-            src={BLeffect}
-            alt="corner effect"
-            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
-            style={{ bottom: 'calc(-1vh - 24px)', left: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
-          />
-          <img
-            src={BReffect}
-            alt="corner effect"
-            className="absolute z-20 pointer-events-none select-none object-contain transform scale-150"
-            style={{ bottom: 'calc(-1vh - 24px)', right: 'calc(-2vh - 16px)', width: '48px', height: '48px' }}
-          />
-          <div className={`chat-box relative z-10 w-full ${isExpanded ? 'h-[68vh]' : 'h-[48vh]'} md:h-[68vh] bg-[#D8D2F0] rounded-3xl shadow-2xl overflow-hidden flex flex-col border-y-[4vh] border-x-[3vh] border-[#9180D6] transition-all duration-500`}>
+        <div className={`relative z-10 w-full max-w-4xl mx-auto ${isExpanded ? 'h-[68vh]' : 'h-[48vh]'} md:h-[68vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col border-y-[24px] border-x-[16px] border-[#D8D2F0] transition-all duration-500`}>
           <div className="flex-1 overflow-y-auto p-5 space-y-5">
             {messages.map((message) => (
               <div key={message.id} className="w-full">
                 {message.type === 'bot' ? (
                   <div className="flex items-start space-x-4">
-                    <img src={logo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
+                    <img src={botLogo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
                     <div className="flex-1 bg-gray-50 rounded-3xl p-4 shadow-sm">
                       <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
                         {message.content}
@@ -205,7 +130,7 @@ const ChatBot = () => {
 
             {isTyping && (
               <div className="flex items-start space-x-4">
-                <img src={logo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
+                <img src={botLogo} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-contain" />
                 <div className="flex-1 bg-gray-50 rounded-3xl p-4 shadow-sm">
                   <div className="flex space-x-2">
                     <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
@@ -246,7 +171,6 @@ const ChatBot = () => {
             </div>
           </div>
         </div>
-      </div>
       </div>
     </>
   )
